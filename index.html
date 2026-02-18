@@ -57,3 +57,66 @@
   console.log("Script is running");
 
   const STAGES = [
+    {
+      title: "Age 12 — Visibility Detected",
+      prompt: "You are becoming visible.",
+      popup: {
+        headline: "CONGRATULATIONS",
+        body: "You have been categorized as ‘pretty.’ Please begin lifelong calibration."
+      }
+    },
+    {
+      title: "Age 23 — On Camera",
+      prompt: "Increase authority without increasing threat.",
+      popup: {
+        headline: "CALIBRATION REQUEST",
+        body: "You look competent. Please reduce intimidation by 12%."
+      }
+    },
+    {
+      title: "Age 35 — Gray Hair Detected",
+      prompt: "Choose: dye / pluck / embrace",
+      popup: {
+        headline: "MARKET ALERT",
+        body: "Visibility of age may impact perceived relevance."
+      }
+    }
+  ];
+
+  let stageIndex = 0;
+
+  function renderStage() {
+    document.getElementById("stageTitle").textContent = STAGES[stageIndex].title;
+    document.getElementById("stagePrompt").textContent = STAGES[stageIndex].prompt;
+  }
+
+  function applyLook() {
+    const stage = STAGES[stageIndex];
+    document.getElementById("popupHeadline").textContent = stage.popup.headline;
+    document.getElementById("popupBody").textContent = stage.popup.body;
+
+    const overlay = document.getElementById("overlay");
+    overlay.style.display = "flex";
+    overlay.style.pointerEvents = "auto";
+  }
+
+  function nextStage() {
+    stageIndex = (stageIndex + 1) % STAGES.length;
+    renderStage();
+  }
+
+  function closeOverlay() {
+    const overlay = document.getElementById("overlay");
+    overlay.style.display = "none";
+    overlay.style.pointerEvents = "none";
+  }
+
+  document.getElementById("applyBtn").addEventListener("click", applyLook);
+  document.getElementById("nextStageBtn").addEventListener("click", nextStage);
+  document.getElementById("continueBtn").addEventListener("click", closeOverlay);
+
+  renderStage();
+  </script>
+</body>
+</html>
+
