@@ -53,105 +53,92 @@
     </div>
   </div>
 
-  <script>
+<script>
   console.log("Lifecycle simulation running");
 
   const STAGES = [
-    {
-      title: "Age 14 — Visibility",
-      body: "You are becoming visible.",
-      briefing: "Congratulations. You have entered the market."
-    },
-    {
-      title: "Age 24 — Optimization",
-      body: "Maintenance required to remain competitive.",
-      briefing: "Great job maintaining relevance."
-    },
-    {
-      title: "Age 33 — Preventative",
-      body: "Collagen decreasing 1% per year.",
-      briefing: "Excellent preventative strategy."
-    },
-    {
-      title: "Age 45 — Correction",
-      body: "Intervention intensity increasing.",
-      briefing: "Youth extension achieved. Duration: temporary."
-    },
-    {
-      title: "Age 60 — Diminishing Returns",
-      body: "Market preferences shifting toward youth.",
-      briefing: "Diminishing returns detected."
-    }
+    { title: "Age 14 — Visibility", body: "You are becoming visible.", briefing: "Congratulations. You have entered the market." },
+    { title: "Age 24 — Optimization", body: "Maintenance required to remain competitive.", briefing: "Great job maintaining relevance." },
+    { title: "Age 33 — Preventative", body: "Collagen decreasing 1% per year.", briefing: "Excellent preventative strategy." },
+    { title: "Age 45 — Correction", body: "Intervention intensity increasing.", briefing: "Youth extension achieved. Duration: temporary." },
+    { title: "Age 60 — Diminishing Returns", body: "Market preferences shifting toward youth.", briefing: "Diminishing returns detected." }
   ];
 
   let stageIndex = 0;
 
+  const stageTitleEl = document.getElementById("stageTitle");
+  const stagePromptEl = document.getElementById("stagePrompt");
+  const overlayEl = document.getElementById("overlay");
+  const popupHeadlineEl = document.getElementById("popupHeadline");
+  const popupBodyEl = document.getElementById("popupBody");
+
   function renderStage() {
-    document.getElementById("stageTitle").textContent = STAGES[stageIndex].title;
-    document.getElementById("stagePrompt").textContent = STAGES[stageIndex].body;
+    const stage = STAGES[stageIndex];
+    stageTitleEl.textContent = stage.title;
+    stagePromptEl.textContent = stage.body;
+  }
+
+  function openOverlay(headline, body) {
+    popupHeadlineEl.textContent = headline;
+    popupBodyEl.textContent = body;
+    overlayEl.style.display = "flex";
+    overlayEl.style.pointerEvents = "auto";
+  }
+
+  function closeOverlay() {
+    overlayEl.style.display = "none";
+    overlayEl.style.pointerEvents = "none";
   }
 
   function applyLook() {
     const stage = STAGES[stageIndex];
-
-    document.getElementById("popupHeadline").textContent = stage.title;
-    document.getElementById("popupBody").textContent = stage.briefing;
-
-    const overlay = document.getElementById("overlay");
-    overlay.style.display = "flex";
-    overlay.style.pointerEvents = "auto";
-  }
-
-  function nextStage() {
-    stageIndex++;
-
-    if (stageIndex < STAGES.length) {
-      renderStage();
-    } else {
-      showFinalChoice();
-    }
-  }
-
-  function closeOverlay() {
-    const overlay = document.getElementById("overlay");
-    overlay.style.display = "none";
-    overlay.style.pointerEvents = "none";
+    openOverlay(stage.title, stage.briefing);
   }
 
   function showFinalChoice() {
-    document.getElementById("stageTitle").textContent = "Age 63 — Final State";
-    document.getElementById("stagePrompt").innerHTML = `
+    stageTitleEl.textContent = "Age 63 — Final State";
+    stagePromptEl.innerHTML = `
       Market Value: 7%<br><br>
       Your brain is where you want it to be.<br>
       Society does not value this configuration.<br><br>
-      <button onclick="returnToYouth()" style="margin:8px;padding:10px 16px;">Return to Age 16</button>
-      <button onclick="remainAged()" style="margin:8px;padding:10px 16px;">Remain 63</button>
+      <button id="btnYouth" style="margin:8px;padding:10px 16px; cursor:pointer;">Return to Age 16</button>
+      <button id="btnRemain" style="margin:8px;padding:10px 16px; cursor:pointer;">Remain 63</button>
     `;
 
     document.getElementById("nextStageBtn").style.display = "none";
     document.getElementById("applyBtn").style.display = "none";
+
+    document.getElementById("btnYouth").addEventListener("click", () => {
+      stageTitleEl.textContent = "Age 16 — Peak Market Visibility";
+      stagePromptEl.innerHTML = `
+        Collagen: 100%<br>
+        Market Value: 92%<br><br>
+        Exposure: High<br>
+        Vulnerability: High<br>
+        Wisdom: 0<br><br>
+        You are visible again.<br><br>
+        <button id="tryOther1" style="padding:10px 16px; cursor:pointer;">Try the other choice</button>
+      `;
+      document.getElementById("tryOther1").addEventListener("click", showFinalChoice);
+    });
+
+    document.getElementById("btnRemain").addEventListener("click", () => {
+      stageTitleEl.textContent = "Age 63 — Remain";
+      stagePromptEl.innerHTML = `
+        Market Value: 7%<br>
+        Wisdom: 100%<br>
+        Experience: 100%<br><br>
+        Market does not currently reward this asset.<br><br>
+        <button id="tryOther2" style="padding:10px 16px; cursor:pointer;">Try the other choice</button>
+      `;
+      document.getElementById("tryOther2").addEventListener("click", showFinalChoice);
+    });
   }
 
-  function returnToYouth() {
-    document.getElementById("stageTitle").textContent = "Age 16 — Peak Market Visibility";
-    document.getElementById("stagePrompt").innerHTML = `
-      Collagen: 100%<br>
-      Market Value: 92%<br><br>
-      Exposure: High<br>
-      Vulnerability: High<br>
-      Wisdom: 0<br><br>
-      You are visible again.
-    `;
-  }
-
-  function remainAged() {
-    document.getElementById("stageTitle").textContent = "Age 63 — Remain";
-    document.getElementById("stagePrompt").innerHTML = `
-      Market Value: 7%<br>
-      Wisdom: 100%<br>
-      Experience: 100%<br><br>
-      Market does not currently reward this asset.
-    `;
+  function nextStage() {
+    stageIndex += 1;
+    if (stageIndex < STAGES.length) renderStage();
+    else showFinalChoice();
   }
 
   document.getElementById("applyBtn").addEventListener("click", applyLook);
