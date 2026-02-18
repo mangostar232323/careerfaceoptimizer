@@ -54,32 +54,34 @@
   </div>
 
   <script>
-  console.log("Script is running");
+ <script>
+  console.log("Lifecycle simulation running");
 
   const STAGES = [
     {
-      title: "Age 12 — Visibility Detected",
-      prompt: "You are becoming visible.",
-      popup: {
-        headline: "CONGRATULATIONS",
-        body: "You have been categorized as ‘pretty.’ Please begin lifelong calibration."
-      }
+      title: "Age 14 — Visibility",
+      body: "You are becoming visible.",
+      briefing: "Congratulations. You have entered the market."
     },
     {
-      title: "Age 23 — On Camera",
-      prompt: "Increase authority without increasing threat.",
-      popup: {
-        headline: "CALIBRATION REQUEST",
-        body: "You look competent. Please reduce intimidation by 12%."
-      }
+      title: "Age 24 — Optimization",
+      body: "Maintenance required to remain competitive.",
+      briefing: "Great job maintaining relevance."
     },
     {
-      title: "Age 35 — Gray Hair Detected",
-      prompt: "Choose: dye / pluck / embrace",
-      popup: {
-        headline: "MARKET ALERT",
-        body: "Visibility of age may impact perceived relevance."
-      }
+      title: "Age 33 — Preventative",
+      body: "Collagen decreasing 1% per year.",
+      briefing: "Excellent preventative strategy."
+    },
+    {
+      title: "Age 45 — Correction",
+      body: "Intervention intensity increasing.",
+      briefing: "Youth extension achieved. Duration: temporary."
+    },
+    {
+      title: "Age 60 — Diminishing Returns",
+      body: "Market preferences shifting toward youth.",
+      briefing: "Diminishing returns detected."
     }
   ];
 
@@ -87,13 +89,14 @@
 
   function renderStage() {
     document.getElementById("stageTitle").textContent = STAGES[stageIndex].title;
-    document.getElementById("stagePrompt").textContent = STAGES[stageIndex].prompt;
+    document.getElementById("stagePrompt").textContent = STAGES[stageIndex].body;
   }
 
   function applyLook() {
     const stage = STAGES[stageIndex];
-    document.getElementById("popupHeadline").textContent = stage.popup.headline;
-    document.getElementById("popupBody").textContent = stage.popup.body;
+
+    document.getElementById("popupHeadline").textContent = stage.title;
+    document.getElementById("popupBody").textContent = stage.briefing;
 
     const overlay = document.getElementById("overlay");
     overlay.style.display = "flex";
@@ -101,8 +104,13 @@
   }
 
   function nextStage() {
-    stageIndex = (stageIndex + 1) % STAGES.length;
-    renderStage();
+    stageIndex++;
+
+    if (stageIndex < STAGES.length) {
+      renderStage();
+    } else {
+      showFinalChoice();
+    }
   }
 
   function closeOverlay() {
@@ -111,12 +119,45 @@
     overlay.style.pointerEvents = "none";
   }
 
+  function showFinalChoice() {
+    document.getElementById("stageTitle").textContent = "Age 63 — Final State";
+    document.getElementById("stagePrompt").innerHTML = `
+      Market Value: 7%<br><br>
+      Your brain is where you want it to be.<br>
+      Society does not value this configuration.<br><br>
+      <button onclick="returnToYouth()" style="margin:8px;padding:10px 16px;">Return to Age 16</button>
+      <button onclick="remainAged()" style="margin:8px;padding:10px 16px;">Remain 63</button>
+    `;
+
+    document.getElementById("nextStageBtn").style.display = "none";
+    document.getElementById("applyBtn").style.display = "none";
+  }
+
+  function returnToYouth() {
+    document.getElementById("stageTitle").textContent = "Age 16 — Peak Market Visibility";
+    document.getElementById("stagePrompt").innerHTML = `
+      Collagen: 100%<br>
+      Market Value: 92%<br><br>
+      Exposure: High<br>
+      Vulnerability: High<br>
+      Wisdom: 0<br><br>
+      You are visible again.
+    `;
+  }
+
+  function remainAged() {
+    document.getElementById("stageTitle").textContent = "Age 63 — Remain";
+    document.getElementById("stagePrompt").innerHTML = `
+      Market Value: 7%<br>
+      Wisdom: 100%<br>
+      Experience: 100%<br><br>
+      Market does not currently reward this asset.
+    `;
+  }
+
   document.getElementById("applyBtn").addEventListener("click", applyLook);
   document.getElementById("nextStageBtn").addEventListener("click", nextStage);
   document.getElementById("continueBtn").addEventListener("click", closeOverlay);
 
   renderStage();
-  </script>
-</body>
-</html>
-
+</script>
